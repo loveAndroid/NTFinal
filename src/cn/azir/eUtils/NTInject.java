@@ -21,6 +21,7 @@ import java.util.List;
 import android.app.Activity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import cn.azir.eUtils.listener.EventListener;
 import cn.azir.eUtils.obj.ViewInfo;
 import cn.azir.eUtils.obj.build.ViewInfoBuild;
@@ -58,16 +59,30 @@ public class NTInject {
 
 	private static void dispatchListener(ViewInfo viewInfo) throws IllegalAccessException, IllegalArgumentException {
 
-		String onClick = viewInfo.getOnClick();
 		Object source = viewInfo.getSource();
 		Field field = viewInfo.getField();
 		Object obj = field.get(source);
 		
 		if (obj instanceof View) {
-			if (!TextUtils.isEmpty(onClick)) {
+			if (!TextUtils.isEmpty(viewInfo.getOnClick())) {
 				((View) obj).setOnClickListener(new EventListener(viewInfo));
 			}
+			
+			if (!TextUtils.isEmpty(viewInfo.getOnLongClick())) {
+				((View) obj).setOnLongClickListener(new EventListener(viewInfo));
+			}
 		}
+		
+		if (obj instanceof AdapterView<?>) {
+			if (!TextUtils.isEmpty(viewInfo.getOnItemClick())) {
+				((AdapterView<?>) obj).setOnItemClickListener(new EventListener(viewInfo));
+			}
+			
+			if (!TextUtils.isEmpty(viewInfo.getOnItemLongClick())) {
+				((AdapterView<?>) obj).setOnItemLongClickListener(new EventListener(viewInfo));
+			}
+		}
+		
 	}
 
 }

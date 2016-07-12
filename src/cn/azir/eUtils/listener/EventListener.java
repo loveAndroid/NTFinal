@@ -36,17 +36,23 @@ public class EventListener implements OnClickListener,OnItemClickListener,OnLong
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		return false;
+		Class<?>[] clss = {AdapterView.class,View.class,Integer.class,Long.class};
+		Object[] params = {parent,view,position,id};
+		return (boolean) handEventListener(mViewInfo.getOnItemLongClick(), clss, params);
 	}
 
 	@Override
 	public boolean onLongClick(View v) {
-		return false;
+		Class<?>[] clss = {View.class};
+		Object[] params = {v};
+		return (boolean) handEventListener(mViewInfo.getOnLongClick(), clss, params);
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		
+		Class<?>[] clss = {AdapterView.class,View.class,Integer.class,Long.class};
+		Object[] params = {parent,view,position,id};
+		handEventListener(mViewInfo.getOnItemLongClick(), clss, params);
 	}
 
 	@Override
@@ -56,7 +62,7 @@ public class EventListener implements OnClickListener,OnItemClickListener,OnLong
 		handEventListener(mViewInfo.getOnClick(),clss,params);
 	}
 	
-	private void handEventListener(String methodName,Class<?>[] clss, View[] params){
+	private Object handEventListener(String methodName,Class<?>[] clss, Object[] params){
 		
 		try {
 			Object source = mViewInfo.getSource();
@@ -64,7 +70,7 @@ public class EventListener implements OnClickListener,OnItemClickListener,OnLong
 			if(method != null){
 				try {
 					method.setAccessible(true);
-					method.invoke(source, params);
+					return method.invoke(source, params);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				} catch (IllegalArgumentException e) {
@@ -77,6 +83,7 @@ public class EventListener implements OnClickListener,OnItemClickListener,OnLong
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
+		return null;
 		
 	}
 	

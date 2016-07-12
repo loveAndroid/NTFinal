@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import android.view.View;
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface NTViewInject {
@@ -30,6 +32,7 @@ public @interface NTViewInject {
 
 	String onItemClick() default "";
 
+//	public boolean onLongClick(View v)
 	String onLongClick() default "";
 
 	String onItemLongClick() default "";
