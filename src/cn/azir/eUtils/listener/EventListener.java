@@ -19,50 +19,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import cn.azir.eUtils.obj.ViewInfo;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 
-public class EventListener implements OnClickListener,OnItemClickListener,OnLongClickListener,OnItemLongClickListener{
-
-	private ViewInfo mViewInfo;
+public abstract class EventListener {
 	
-	public EventListener(ViewInfo mViewInfo) {
-		this.mViewInfo = mViewInfo;
-	}
-
-	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		Class<?>[] clss = {AdapterView.class,View.class,Integer.class,Long.class};
-		Object[] params = {parent,view,position,id};
-		return (boolean) handEventListener(mViewInfo.getOnItemLongClick(), clss, params);
-	}
-
-	@Override
-	public boolean onLongClick(View v) {
-		Class<?>[] clss = {View.class};
-		Object[] params = {v};
-		return (boolean) handEventListener(mViewInfo.getOnLongClick(), clss, params);
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		Class<?>[] clss = {AdapterView.class,View.class,Integer.class,Long.class};
-		Object[] params = {parent,view,position,id};
-		handEventListener(mViewInfo.getOnItemLongClick(), clss, params);
-	}
-
-	@Override
-	public void onClick(View v) {
-		Class<?>[] clss = {View.class};
-		View[] params = {v};
-		handEventListener(mViewInfo.getOnClick(),clss,params);
+	protected ViewInfo mViewInfo;
+	
+	public EventListener(ViewInfo viewinfo){
+		this.mViewInfo = viewinfo;
 	}
 	
-	private Object handEventListener(String methodName,Class<?>[] clss, Object[] params){
+	protected Object handEventListener(String methodName,Class<?>[] clss, Object[] params){
 		
 		try {
 			Object source = mViewInfo.getSource();
@@ -84,7 +50,6 @@ public class EventListener implements OnClickListener,OnItemClickListener,OnLong
 			e.printStackTrace();
 		}
 		return null;
-		
 	}
 	
 }

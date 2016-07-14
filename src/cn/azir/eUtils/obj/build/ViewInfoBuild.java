@@ -30,11 +30,9 @@ public class ViewInfoBuild {
 		Field[] fields = source.getClass().getDeclaredFields();
 		if(fields != null && fields.length > 0) {
 			for (Field field : fields) {
-				field.setAccessible(true);
 				ViewInfo viewInfo = resolveField(source,view,field);
-				if(viewInfo != null) {
+				if(viewInfo != null) 
 					infos.add(viewInfo);
-				}
 			}
 		}
 		return infos;
@@ -53,6 +51,7 @@ public class ViewInfoBuild {
 			String onLongClick = annotation.onLongClick();
 			
 			try {
+				field.setAccessible(true);
 				field.set(source, view.findViewById(id));
 			} catch (IllegalAccessException | IllegalArgumentException e) {
 				e.printStackTrace();

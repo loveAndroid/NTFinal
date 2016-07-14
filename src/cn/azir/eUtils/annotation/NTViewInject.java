@@ -20,20 +20,22 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import android.view.View;
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface NTViewInject {
 
 	int id() default 0;
 
+//	public void onClick(View v)
 	String onClick() default "";
 
+//	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 	String onItemClick() default "";
 
 //	public boolean onLongClick(View v)
 	String onLongClick() default "";
 
+//	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
 	String onItemLongClick() default "";
+	
 }

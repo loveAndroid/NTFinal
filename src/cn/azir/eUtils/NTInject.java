@@ -22,12 +22,18 @@ import android.app.Activity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import cn.azir.eUtils.listener.EventListener;
+import cn.azir.eUtils.listener.DefaultEventListener;
 import cn.azir.eUtils.obj.ViewInfo;
 import cn.azir.eUtils.obj.build.ViewInfoBuild;
 
 public class NTInject {
 	
+	
+	public static <T extends Activity > void inject(T activity , int layoutId) {
+		activity.getWindow().setContentView(layoutId);
+		inject(activity, activity.getWindow().getDecorView());
+	}
+
 	public static <T extends Activity> void inject(T activity) {
 		inject(activity, activity.getWindow().getDecorView());
 	}
@@ -42,13 +48,15 @@ public class NTInject {
 		if (viewInfos == null || viewInfos.size() <= 0) {
 			return;
 		}
-		
+
 		for (ViewInfo viewInfo : viewInfos) {
 			if (viewInfo == null) {
 				continue;
 			}
 			try {
-				dispatchListener(viewInfo);
+				if (viewInfo.getId() > 0) {
+					dispatchListener(viewInfo);
+				}
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
@@ -62,27 +70,27 @@ public class NTInject {
 		Object source = viewInfo.getSource();
 		Field field = viewInfo.getField();
 		Object obj = field.get(source);
-		
+
 		if (obj instanceof View) {
 			if (!TextUtils.isEmpty(viewInfo.getOnClick())) {
-				((View) obj).setOnClickListener(new EventListener(viewInfo));
+				((View) obj).setOnClickListener(new DefaultEventListener(viewInfo));
 			}
-			
+
 			if (!TextUtils.isEmpty(viewInfo.getOnLongClick())) {
-				((View) obj).setOnLongClickListener(new EventListener(viewInfo));
+				((View) obj).setOnLongClickListener(new DefaultEventListener(viewInfo));
 			}
 		}
-		
+
 		if (obj instanceof AdapterView<?>) {
 			if (!TextUtils.isEmpty(viewInfo.getOnItemClick())) {
-				((AdapterView<?>) obj).setOnItemClickListener(new EventListener(viewInfo));
+				((AdapterView<?>) obj).setOnItemClickListener(new DefaultEventListener(viewInfo));
 			}
-			
+
 			if (!TextUtils.isEmpty(viewInfo.getOnItemLongClick())) {
-				((AdapterView<?>) obj).setOnItemLongClickListener(new EventListener(viewInfo));
+				((AdapterView<?>) obj).setOnItemLongClickListener(new DefaultEventListener(viewInfo));
 			}
 		}
-		
+
 	}
 
 }
