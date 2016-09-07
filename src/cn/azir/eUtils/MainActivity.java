@@ -2,14 +2,14 @@ package cn.azir.eUtils;
 
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Set;
+
+import com.example.injectactivity.InjectBaseAct;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
@@ -18,15 +18,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.azir.eUtils.annotation.NTViewInject;
 
-public class MainActivity extends Activity {
+public class MainActivity extends InjectBaseAct {
 	
 	@NTViewInject(id = R.id.helloTv,onClick="onClickEvent",onLongClick="longEvent")
-	private TextView mText;
+	private ImageView mText;
 	
 	@NTViewInject(id=R.id.helloListView,onItemClick = "itemClickEvent")
 	private ListView helloListView;
@@ -38,9 +39,10 @@ public class MainActivity extends Activity {
 		
 		NTInject.inject(this);
 		
-		mText.setText("hfldkjakls");
+		ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
+		ImageLoader.getInstance().init(configuration );
 		
-		
+		ImageLoader.getInstance().displayImage("https://www.baidu.com/img/bd_logo1.png", mText);
 		
 		helloListView.setAdapter(new MyAdapter());
 		
@@ -56,10 +58,12 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 			System.out.println("Exception -- " + e.getMessage());
 		}
-		
-		
-		
-		
+	}
+	
+	
+	@Override
+	public Resources getResources() {
+		return super.getResources();
 	}
 	
 	
@@ -122,8 +126,6 @@ public class MainActivity extends Activity {
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			
-			Toast.makeText(getApplicationContext(), "btn == " + (holder.btn == null), 0).show();
 			
 			return convertView;
 		}
